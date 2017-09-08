@@ -63,6 +63,7 @@ public class Login extends HttpServlet {
 		}else{
 			out.println("please login again");
 		}
+		//doGet(request, response);
 	}
 
 	/**
