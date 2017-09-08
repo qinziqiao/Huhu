@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
  */
 @WebServlet("/login")
 public class Login extends HttpServlet {
+	int a=0;
 	private static final long serialVersionUID = 1L;
 	private UserTable ut; 
     /**
