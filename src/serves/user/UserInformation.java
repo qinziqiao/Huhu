@@ -84,6 +84,8 @@ public class UserInformation extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			jo.addProperty("idOK", false);
+			response.setStatus(500);
+			out.println(jo.toString());
 			e.printStackTrace();
 		}
 	}
