@@ -106,6 +106,8 @@ public class QuestList extends HttpServlet {
 			// TODO Auto-generated catch block
 			JsonObject rjo=new JsonObject();
 			rjo.addProperty("isOK", false);
+			response.setStatus(500);
+			out.println(rjo.toString());
 			e.printStackTrace();
 		}
 	}

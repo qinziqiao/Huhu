@@ -96,6 +96,7 @@ public class Register extends HttpServlet {
 			// TODO Auto-generated catch block
 			jo.addProperty("isOK", false);
 			jo.addProperty("information", "service error");
+			response.setStatus(500);
 			out.println(jo.toString());
 			e.printStackTrace();
 		}

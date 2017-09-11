@@ -68,6 +68,7 @@ public class PostComment extends HttpServlet {
 		if(id==null){
 			jo.addProperty("isOK", false);
 			jo.addProperty("information", "please login");
+			response.setStatus(500);
 			out.println(jo.toString());
 			return;
 		}
@@ -83,6 +84,7 @@ public class PostComment extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			jo.addProperty("isOK", false);
+			response.setStatus(500);
 			out.println(jo.toString());
 		}
 	}
