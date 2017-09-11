@@ -98,4 +98,17 @@ public class QuestTable {
 		Statement stmt=conn.createStatement();
 		return stmt.executeQuery(sql);
 	}
+	/**
+	 * ¸ù¾Ýlib¼ìË÷quest
+	 * @param lid
+	 * @param page
+	 * @param amountPerPage
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet selectByLid(String lid,int page,int amountPerPage) throws SQLException{
+		String sql="select * from quest_table where id in (select distinct qid from questlabelmap_table where lid="+lid+") order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
+		Statement stmt=conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
 }
