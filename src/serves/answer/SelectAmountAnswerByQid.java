@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 @WebServlet("/SelectAmountAnswerByQid")
 public class SelectAmountAnswerByQid extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private int b=1;
     /**
      * @see HttpServlet#HttpServlet()
      */
