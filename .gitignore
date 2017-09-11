@@ -51,3 +51,4 @@ build/
 .settings
 *.class
 .classpath
+GlobalParameter.java
