@@ -75,9 +75,9 @@ public class QuestList extends HttpServlet {
 //			return;
 //		}
 		int type,page,amount=10;
-		type=Integer.parseInt(request.getParameter("type"));
-		page=Integer.parseInt(request.getParameter("page"));
 		try {
+			type=Integer.parseInt(request.getParameter("type"));
+			page=Integer.parseInt(request.getParameter("page"));
 			ResultSet rs=qt.selectOnePage(page, amount, type);
 			int n=0;
 			JsonObject jo;
@@ -102,7 +102,7 @@ public class QuestList extends HttpServlet {
 			rjo.addProperty("isOK", true);
 			rjo.add("quests",ja);
 			out.println(rjo.toString());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			JsonObject rjo=new JsonObject();
 			rjo.addProperty("isOK", false);
