@@ -77,7 +77,7 @@ public class SelectFollower extends HttpServlet {
 		
 		try {
 			AttentionTable at=new AttentionTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
-			ResultSet rs =at.selectByAtt_id(request_att_id+"");
+			ResultSet rs =at.selectInformByAtt_id(request_att_id+"");
 			
 			//对结果集进行JSON解析
 			if(rs.next()==false){
@@ -126,20 +126,26 @@ public class SelectFollower extends HttpServlet {
 		JsonArray jarray  = new JsonArray();
 		try {
 			while(rs.next()){
-				int temp = rs.getInt("id");
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				String photo= rs.getString("photo");
 				JsonObject jo = new JsonObject();
-				jo.addProperty("Follower",temp);
+				jo.addProperty("Follower",id);
+				jo.addProperty("name",name);
+				jo.addProperty("photo", photo);
 				jarray.add(jo);
 			}		
 		} catch (SQLException e) {
 			isOK=false;
+			//SQL异常
+			System.out.println("SQL error");
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
 			out.flush();
 			out.close();
 			return false;
 		}
-		
+        
 		jObject.addProperty("isOK", isOK);
 		jObject.add("Followers",jarray);
 		out.print(jObject.toString());

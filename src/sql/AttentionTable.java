@@ -28,7 +28,19 @@ public class AttentionTable {
 	 * @throws SQLException
 	 */
 	public ResultSet selectById(String id) throws SQLException{
-		String sql="select distinct att_id from attention_table where id='"+id+"';";
+		String sql="select distinct att_id from attention_table where id='"+id+";";
+		Statement stmt = conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
+	/**
+	 * 返回偶像信息
+	 * @param id
+	 * @return
+	 */
+	public ResultSet selectInformById(String id)throws SQLException{
+		String sql="select id as att_id,name,photo from user_table"
+				+ " where id in(select distinct att_id from attention_table "
+				+ "where id="+id+");";
 		Statement stmt = conn.createStatement();
 		return stmt.executeQuery(sql);
 	}
@@ -59,6 +71,21 @@ public class AttentionTable {
 		Statement stmt = conn.createStatement();
 		return stmt.executeQuery(sql);
 	}
+	
+	/**
+	 * 通过att_id 获得粉丝的信息
+	 * @param att_id
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet selectInformByAtt_id(String att_id) throws SQLException{
+		String sql="select id,name,photo from user_table"
+				+ " where id in(select distinct id from attention_table "
+				+ "where att_id="+att_id+");";
+		Statement stmt = conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
+	
 	/**
 	 * ��ѯ��ע��ĳ�û�������
 	 * @param att_id
