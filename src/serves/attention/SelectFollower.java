@@ -61,12 +61,15 @@ public class SelectFollower extends HttpServlet {
 		}catch (NumberFormatException  e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if(out!=null)
+			if(out!=null){
+				response.setStatus(500);
 				Response(out, false,null);
+			}
 			return;
 		} 
 		
 		if(request_att_id<0){
+			response.setStatus(500);
 			Response(out, false,null);
 			System.out.println("查询为负数");
 			return;
@@ -79,6 +82,7 @@ public class SelectFollower extends HttpServlet {
 			//对结果集进行JSON解析
 			if(rs.next()==false){
 				//没有找到数据
+				response.setStatus(500);
 				Response(out, false,null);
 			}
 			else{
@@ -87,6 +91,7 @@ public class SelectFollower extends HttpServlet {
 			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}

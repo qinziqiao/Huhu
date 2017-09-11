@@ -35,8 +35,7 @@ public class SelectQuestLabel extends HttpServlet{
 	    response.setCharacterEncoding("utf-8");
 		//查看请求
 		try {
-			request_qid = Integer.parseInt( request.getParameter("qid"));
-					
+			request_qid = Integer.parseInt( request.getParameter("qid"));			
 			out= response.getWriter();
 		}catch (IOException e) {
 			System.out.println("io异常");
@@ -49,12 +48,15 @@ public class SelectQuestLabel extends HttpServlet{
 		}catch (NumberFormatException  e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if(out!=null)
+			if(out!=null){
+				response.setStatus(500);
 				Response(out, false,null);
+			}
 			return;
 		} 
 		
 		if(request_qid<0){
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
@@ -65,6 +67,7 @@ public class SelectQuestLabel extends HttpServlet{
 			//对结果集进行JSON解析
 			if(rs.next()==false){
 				//没有找到数据
+				response.setStatus(500);
 				Response(out, false,null);
 			}
 			else{
@@ -73,6 +76,7 @@ public class SelectQuestLabel extends HttpServlet{
 			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
