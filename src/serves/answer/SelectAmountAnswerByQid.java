@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import com.google.gson.JsonObject;
 public class SelectAmountAnswerByQid extends HttpServlet {
 	int a=0;
 	private static final long serialVersionUID = 1L;
+	private int b=1;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -48,25 +50,16 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		try {
 			request_qid = Integer.parseInt( request.getParameter("qid"));
 			request_page= Integer.parseInt( request.getParameter("page"));
-			out= response.getWriter();
-		}catch (IOException e) {
-			System.out.println("io瀵倸鐖�");
-			//TODO:婵″倷缍嶆径鍕倞鐠囥儱绱撶敮锟�
-			try {
-				response.sendError(404, "閹劏顩﹂弻銉﹀閻ㄥ嫯绁┃鎰瑝鐎涙ê婀�");
-			} catch (IOException e1) {
-				System.out.println("IO瀵倸鐖�");
-			}
 		}catch (NumberFormatException  e) {
 			System.out.println("閹碉拷婵夘偅鏆熼幑顔肩磽鐢拷");
 			isOK = false;
 			if(out!=null)
-				Response(out, false,null);
+				Response(response, false,null);
 			return;
 		} 
 		
 		if(request_qid<0){
-			Response(out, false,null);
+			Response(response, false,null);
 			return;
 		}
 		
@@ -77,15 +70,15 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			//鐎靛湱绮ㄩ弸婊堟肠鏉╂稖顢慗SON鐟欙絾鐎�
 			if(rs.next()==false){
 				//濞屸剝婀侀幍鎯у煂閺佺増宓�
-				Response(out, false,null);
+				Response(response, false,null);
 			}
 			else{
 				rs.beforeFirst();
-				Response(out, true,rs);
+				Response(response, true,rs);
 			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
-			Response(out, false,null);
+			Response(response, false,null);
 			return;
 		}
 		
@@ -99,10 +92,26 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private boolean Response(PrintWriter out, boolean isOK,ResultSet rs){
+	private boolean Response(HttpServletResponse response, boolean isOK,ResultSet rs){
+			PrintWriter out;
+			try {
+				out = ((ServletResponse) response).getWriter();
+			} catch (IOException e) {
+				System.out.println("io瀵倸鐖�");
+				//TODO:婵″倷缍嶆径鍕倞鐠囥儱绱撶敮锟�
+				try {
+					response.sendError(404, "閹劏顩﹂弻銉﹀閻ㄥ嫯绁┃鎰瑝鐎涙ê婀�");
+				} catch (IOException e1) {
+					System.out.println("IO瀵倸鐖�");
+				}
+				return false;
+			}
+	
 		JsonObject jObject = new JsonObject();
 		//婵″倹鐏夋稉宄匥
 		if(!isOK){
+			//失败的时候加一个500错误码
+			response.setStatus(500);
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
 			out.flush();

@@ -45,6 +45,7 @@ public class homepage extends HttpServlet {
 		String request_uid_string =IsLogin.isLogin(request);
 		if(request_uid_string==null){
 			//TODO 这里有异常需要捕获
+			response.setStatus(500);
 			Response(response.getWriter(), false, null);
 			return;
 		}
@@ -73,12 +74,15 @@ public class homepage extends HttpServlet {
 		} catch (NumberFormatException e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if (out != null)
+			if (out != null){
+				response.setStatus(500);
 				Response(out, false, null);
+			}
 			return;
 		}
 
 		if (request_uid < 0) {
+			response.setStatus(500);
 			Response(out, false, null);
 			return;
 		}
@@ -91,6 +95,7 @@ public class homepage extends HttpServlet {
 			// 对结果集进行JSON解析
 			if (rs.next() == false) {
 				// 没有找到数据
+				response.setStatus(500);
 				Response(out, false, null);
 			} else {
 				rs.beforeFirst();
@@ -98,6 +103,7 @@ public class homepage extends HttpServlet {
 			}
 
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false, null);
 			return;
 		}

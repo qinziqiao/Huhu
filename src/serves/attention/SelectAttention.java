@@ -60,12 +60,15 @@ public class SelectAttention extends HttpServlet {
 		}catch (NumberFormatException  e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if(out!=null)
+			if(out!=null){
+				response.setStatus(500);
 				Response(out, false,null);
+			}
 			return;
 		} 
 		
 		if(request_id<0){
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
@@ -77,6 +80,7 @@ public class SelectAttention extends HttpServlet {
 			//对结果集进行JSON解析
 			if(rs.next()==false){
 				//没有找到数据
+				response.setStatus(500);
 				Response(out, false,null);
 			}
 			else{
@@ -85,6 +89,7 @@ public class SelectAttention extends HttpServlet {
 			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
