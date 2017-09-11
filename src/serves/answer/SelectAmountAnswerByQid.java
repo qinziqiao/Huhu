@@ -23,7 +23,6 @@ import com.google.gson.JsonObject;
 @WebServlet("/SelectAmountAnswerByQid")
 public class SelectAmountAnswerByQid extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -33,8 +32,8 @@ public class SelectAmountAnswerByQid extends HttpServlet {
     }
 
 	/**
-	 * 根据用户的id获取指定数目的回答
-	 * qid、page
+	 * 鏍规嵁鐢ㄦ埛鐨刬d鑾峰彇鎸囧畾鏁扮洰鐨勫洖绛�
+	 * qid銆乸age
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,21 +43,21 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		PrintWriter out=null;
 		response.setContentType("text/html;charset=utf-8");
 	    response.setCharacterEncoding("utf-8");
-		//查看请求
+		//鏌ョ湅璇锋眰
 		try {
 			request_qid = Integer.parseInt( request.getParameter("qid"));
 			request_page= Integer.parseInt( request.getParameter("page"));
 			out= response.getWriter();
 		}catch (IOException e) {
-			System.out.println("io异常");
-			//TODO:如何处理该异常
+			System.out.println("io寮傚父");
+			//TODO:濡備綍澶勭悊璇ュ紓甯�
 			try {
-				response.sendError(404, "您要查找的资源不存在");
+				response.sendError(404, "鎮ㄨ鏌ユ壘鐨勮祫婧愪笉瀛樺湪");
 			} catch (IOException e1) {
-				System.out.println("IO异常");
+				System.out.println("IO寮傚父");
 			}
 		}catch (NumberFormatException  e) {
-			System.out.println("所填数据异常");
+			System.out.println("鎵�濉暟鎹紓甯�");
 			isOK = false;
 			if(out!=null)
 				Response(out, false,null);
@@ -74,9 +73,9 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			AnswerTable at=new AnswerTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
 			ResultSet rs =at.selectByQid(request_qid+"", request_page, 10);
 			
-			//对结果集进行JSON解析
+			//瀵圭粨鏋滈泦杩涜JSON瑙ｆ瀽
 			if(rs.next()==false){
-				//没有找到数据
+				//娌℃湁鎵惧埌鏁版嵁
 				Response(out, false,null);
 			}
 			else{
@@ -101,7 +100,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 	
 	private boolean Response(PrintWriter out, boolean isOK,ResultSet rs){
 		JsonObject jObject = new JsonObject();
-		//如果不OK
+		//濡傛灉涓峅K
 		if(!isOK){
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
@@ -109,7 +108,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			out.close();
 			return false;
 		}
-		//如果OK
+		//濡傛灉OK
 		JsonArray jarray  = new JsonArray();
 		try {
 			while(rs.next()){
