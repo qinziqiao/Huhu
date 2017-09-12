@@ -85,8 +85,8 @@ public class Login extends HttpServlet {
 				session.setAttribute("id",rs.getString("id"));
 				jo.addProperty("uid", rs.getString("id"));
 				jo.addProperty("type", 1);
-				jo.addProperty("information", "login success");
 				jo.addProperty("isOK", true);
+				jo.addProperty("information", "login success");
 				out.println(jo.toString());
 			}else{
 				//��½ʧ��
