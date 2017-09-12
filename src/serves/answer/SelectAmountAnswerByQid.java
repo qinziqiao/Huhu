@@ -122,7 +122,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		JsonArray jarray  = new JsonArray();
 		try {
 			while(rs.next()){
-				
+				int aid = rs.getInt("id");
 				String detail= rs.getString("detail");
 				int uid = rs.getInt("uid");
 				String post_time =rs.getString("post_time");
@@ -134,6 +134,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 //					jo[i]=new JsonObject();
 //				}
 				JsonObject jo1 = new JsonObject();
+				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail",detail);
 				jo1.addProperty("uid", uid);
 				jo1.addProperty("post_time", post_time);
