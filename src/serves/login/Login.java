@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/login")
+@WebServlet("/Login")
 public class Login extends HttpServlet {
 	int a=0;
 	private static final long serialVersionUID = 1L;

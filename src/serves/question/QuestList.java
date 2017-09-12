@@ -108,7 +108,7 @@ public class QuestList extends HttpServlet {
 			rjo.addProperty("isOK", false);
 			response.setStatus(500);
 			out.println(rjo.toString());
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

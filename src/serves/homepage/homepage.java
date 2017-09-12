@@ -41,14 +41,14 @@ public class homepage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		//登录检测
-		String request_uid_string =IsLogin.isLogin(request);
-		if(request_uid_string==null){
-			//TODO 这里有异常需要捕获
-			response.setStatus(500);
-			Response(response.getWriter(), false, null);
-			return;
-		}
+//		//登录检测
+//		String request_uid_string =IsLogin.isLogin(request);
+//		if(request_uid_string==null){
+//			//TODO 这里有异常需要捕获
+//			response.setStatus(500);
+//			Response(response.getWriter(), false, null);
+//			return;
+//		}
 		
 		
 		int request_uid = -1;
@@ -60,7 +60,7 @@ public class homepage extends HttpServlet {
 
 		// 查看请求
 		try {
-			request_uid = Integer.parseInt(request_uid_string);
+			request_uid = Integer.parseInt(request.getParameter("uid"));
 			request_page = Integer.parseInt(request.getParameter("page"));
 			out = response.getWriter();
 		} catch (IOException e) {
