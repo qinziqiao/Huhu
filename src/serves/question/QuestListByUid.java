@@ -68,9 +68,10 @@ public class QuestListByUid extends HttpServlet {
 		PrintWriter out=response.getWriter();
 		int page,amount=10;
 		String uid=request.getParameter("uid");
+		String type=request.getParameter("type");
 		try {
 			page=Integer.parseInt(request.getParameter("page"));
-			ResultSet rs=qt.selectByUid(uid, page, amount);
+			ResultSet rs=qt.selectByUid(uid, page, amount, type);
 			int n=0;
 			JsonObject jo;
 			JsonArray ja=new JsonArray();

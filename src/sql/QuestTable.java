@@ -73,6 +73,20 @@ public class QuestTable {
 		return stmt.executeQuery(sql);
 	}
 	/**
+	 * 
+	 * @param uid
+	 * @param page
+	 * @param amountPerPage
+	 * @param type
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet selectByUid(String uid,int page,int amountPerPage,String type) throws SQLException{
+		String sql="select * from quest_table where uid="+uid+" and qtype="+type+" order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
+		Statement stmt=conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
+	/**
 	 * ����ĳid��ע���˷�����quest
 	 * @param id �û�id
 	 * @param page ҳ��
