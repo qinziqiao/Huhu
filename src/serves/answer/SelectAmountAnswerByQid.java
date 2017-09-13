@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.GlobalVar.GlobalParameter;
 import sql.AnswerTable;
+import sql.MySQLInformation;
+import sql.UserTable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -121,25 +123,32 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		//婵″倹鐏塐K
 		JsonArray jarray  = new JsonArray();
 		try {
+			UserTable ut=new UserTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 			while(rs.next()){
-				
+				int aid = rs.getInt("id");
 				String detail= rs.getString("detail");
 				int uid = rs.getInt("uid");
 				String post_time =rs.getString("post_time");
 				int agree_sum = rs.getInt("agree_sum");
-				int comment_sum = rs.getInt("comment_sum");
+				int comment_sum = rs.getInt("comment_sum");				
 				
-//				JsonObject jo[5] = new JsonObject[5];
-//				for (int i = 0; i < jo.length; i++) {
-//					jo[i]=new JsonObject();
-//				}
 				JsonObject jo1 = new JsonObject();
+				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail",detail);
+				jo1.addProperty("qid", ""); //空值
 				jo1.addProperty("uid", uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);
 				jo1.addProperty("comment_sum", comment_sum);
-			
+				ResultSet urs=ut.selectById(uid+""); //从用户表拿数据
+				if(urs.next()){
+					jo1.addProperty("name", urs.getString("name"));
+					jo1.addProperty("photo", urs.getString("photo"));
+				}else{
+					jo1.addProperty("name", "unknow");
+					jo1.addProperty("photo", "0");
+				}
+				//加到数组中
 				jarray.add(jo1);
 			}		
 		} catch (SQLException e) {
@@ -149,6 +158,9 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			out.flush();
 			out.close();
 			return false;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		jObject.addProperty("isOK", isOK);

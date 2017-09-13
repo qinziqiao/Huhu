@@ -93,8 +93,10 @@ public class QuestList extends HttpServlet {
 				ResultSet trs=ut.selectById(rs.getString("uid"));
 				if(trs.next()){
 					jo.addProperty("name", trs.getString("name"));
+					jo.addProperty("photo", trs.getString("photo"));
 				}else{
 					jo.addProperty("name", "unknow");
+					jo.addProperty("photo", "0");
 				}
 				ja.add(jo);
 			}
@@ -108,7 +110,7 @@ public class QuestList extends HttpServlet {
 			rjo.addProperty("isOK", false);
 			response.setStatus(500);
 			out.println(rjo.toString());
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

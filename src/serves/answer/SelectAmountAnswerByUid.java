@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.GlobalVar.GlobalParameter;
 import sql.AnswerTable;
+import sql.MySQLInformation;
+import sql.UserTable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -120,20 +122,25 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 		JsonArray jarray = new JsonArray();
 		try {
 			while (rs.next()) {
-
+				int aid = rs.getInt("id");
 				String detail = rs.getString("detail");
 				int qid = rs.getInt("qid");
+				int uid = rs.getInt("uid");
 				String post_time = rs.getString("post_time");
 				int agree_sum = rs.getInt("agree_sum");
 				int comment_sum = rs.getInt("comment_sum");
-
+				
 				JsonObject jo1 = new JsonObject();
+				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail", detail);
 				jo1.addProperty("qid", qid);
+				jo1.addProperty("uid",uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);
 				jo1.addProperty("comment_sum", comment_sum);
-		
+				jo1.addProperty("name", "");
+				jo1.addProperty("photo", "");
+				
 				jarray.add(jo1);
 			}
 		} catch (SQLException e) {
@@ -143,7 +150,7 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 			out.flush();
 			out.close();
 			return false;
-		}
+		} 
 
 		jObject.addProperty("isOK", isOK);
 		jObject.add("answers", jarray);
