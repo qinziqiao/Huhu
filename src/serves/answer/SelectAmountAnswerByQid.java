@@ -136,6 +136,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail",detail);
 				jo1.addProperty("qid", ""); //空值
+				jo1.addProperty("qtitle", "");//暂时为空
 				jo1.addProperty("uid", uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);
