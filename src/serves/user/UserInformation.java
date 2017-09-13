@@ -63,6 +63,8 @@ public class UserInformation extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8");
 		String id=request.getParameter("id");
 		PrintWriter out=response.getWriter();
 		JsonObject jo=new JsonObject();
