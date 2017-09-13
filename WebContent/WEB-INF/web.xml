@@ -5,21 +5,18 @@
     <welcome-file>/web.html</welcome-file>
   </welcome-file-list>
   <session-config>
-        <session-timeout>60</session-timeout>
-    </session-config>
-    
-    
-    <filter>
-        <filter-name>setCharacterEncodingFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-    </filter>
-    
-    <filter-mapping>
-        <filter-name>setCharacterEncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <session-timeout>60</session-timeout>
+  </session-config>
+  <filter>
+    <filter-name>setCharacterEncodingFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>setCharacterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

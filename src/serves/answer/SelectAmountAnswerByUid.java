@@ -121,6 +121,8 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 		// 如果OK
 		JsonArray jarray = new JsonArray();
 		try {
+			QuestTable qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
+
 			while (rs.next()) {
 				int aid = rs.getInt("id");
 				String detail = rs.getString("detail");
@@ -135,7 +137,6 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 				jo1.addProperty("detail", detail);
 				jo1.addProperty("qid", qid);
 				//从quest表里面找数据
-				QuestTable qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 				ResultSet qrs = qt.selectById(qid+"");
 				if(qrs.next()){
 					jo1.addProperty("qtitle",qrs.getString("title"));

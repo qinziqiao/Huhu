@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.IsLogin;
 import serves.tools.GlobalVar.GlobalParameter;
+import sql.AnswerTable;
 import sql.AttentionPage;
+import sql.MySQLInformation;
+import sql.UserTable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -134,6 +137,7 @@ public class homepage extends HttpServlet {
 		// 如果OK
 		JsonArray jarray = new JsonArray();
 		try {
+			UserTable ut=new UserTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 			while (rs.next()) {
 				
 				int id = rs.getInt("id");
@@ -144,6 +148,13 @@ public class homepage extends HttpServlet {
 				String post_time = rs.getString("post_time");
 				int lower_level_sum =rs.getInt("lower_level_sum");
 				int agree_sum = rs.getInt("agree_sum");
+				ResultSet urs=ut.selectById(uid+"");
+				String name="",photo="0";
+				
+				if(urs.next()){
+					name = urs.getString("name");
+					photo = urs.getString("photo");
+				}
 
 				JsonObject jo1 = new JsonObject();
 				jo1.addProperty("id", id);
@@ -154,6 +165,9 @@ public class homepage extends HttpServlet {
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("lower_level_sum", lower_level_sum);
 				jo1.addProperty("agree_sum", agree_sum);
+				
+				jo1.addProperty("name", name);
+				jo1.addProperty("photo", photo);
 
 				jarray.add(jo1);
 			}
@@ -163,7 +177,11 @@ public class homepage extends HttpServlet {
 			out.print(jObject.toString());
 			out.flush();
 			out.close();
+			e.printStackTrace();
 			return false;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		jObject.addProperty("isOK", isOK);

@@ -135,7 +135,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 				JsonObject jo1 = new JsonObject();
 				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail",detail);
-				jo1.addProperty("qid", ""); //空值
+				jo1.addProperty("qid", "0"); //空值
 				jo1.addProperty("qtitle", "");//暂时为空
 				jo1.addProperty("uid", uid);
 				jo1.addProperty("post_time", post_time);
