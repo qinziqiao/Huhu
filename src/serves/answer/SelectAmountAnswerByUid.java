@@ -84,7 +84,7 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 			// 对结果集进行JSON解析
 			if (rs.next() == false) {
 				// 没有找到数据
-				response.setStatus(500);
+				response.setStatus(501);
 				Response(out, false, null);
 			} else {
 				rs.beforeFirst();

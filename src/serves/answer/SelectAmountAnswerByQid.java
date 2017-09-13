@@ -72,6 +72,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			//鐎靛湱绮ㄩ弸婊堟肠鏉╂稖顢慗SON鐟欙絾鐎�
 			if(rs.next()==false){
 				//濞屸剝婀侀幍鎯у煂閺佺増宓�
+				response.setStatus(501);
 				Response(response, false,null);
 			}
 			else{
