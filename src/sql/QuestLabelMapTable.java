@@ -116,4 +116,17 @@ public class QuestLabelMapTable {
 			return false;
 	}
 	
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

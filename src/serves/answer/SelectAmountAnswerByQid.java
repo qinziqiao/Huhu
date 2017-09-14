@@ -68,6 +68,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		try {
 			AnswerTable at=new AnswerTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
 			ResultSet rs =at.selectByQid(request_qid+"", request_page, 10);
+			at.CloseConnection();
 			
 			//鐎靛湱绮ㄩ弸婊堟肠鏉╂稖顢慗SON鐟欙絾鐎�
 			if(rs.next()==false){

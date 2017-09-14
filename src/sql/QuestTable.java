@@ -114,7 +114,7 @@ public class QuestTable {
 		return stmt.executeQuery(sql);
 	}
 	/**
-	 * ¸ù¾Ýlib¼ìË÷quest
+	 * ï¿½ï¿½ï¿½ï¿½libï¿½ï¿½ï¿½ï¿½quest
 	 * @param lid
 	 * @param page
 	 * @param amountPerPage
@@ -125,5 +125,17 @@ public class QuestTable {
 		String sql="select * from quest_table where id in (select distinct qid from questlabelmap_table where lid="+lid+") order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
 		Statement stmt=conn.createStatement();
 		return stmt.executeQuery(sql);
+	}
+	
+	/**
+	 * å…³é—­è¿žæŽ¥
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

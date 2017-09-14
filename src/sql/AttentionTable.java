@@ -145,4 +145,16 @@ public class AttentionTable {
 		sql="delete from attention_table where id="+id+" and att_id="+att_id+";";
 		return stmt.executeUpdate(sql);
 	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

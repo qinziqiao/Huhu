@@ -69,4 +69,16 @@ public class UserTable {
 		stmt.executeUpdate(sql);
 		return 0;
 	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
