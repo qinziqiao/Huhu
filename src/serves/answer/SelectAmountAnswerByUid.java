@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import serves.tools.GlobalVar.GlobalParameter;
 import sql.AnswerTable;
 import sql.MySQLInformation;
-import sql.UserTable;
+import sql.QuestTable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -84,7 +84,7 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 			// 对结果集进行JSON解析
 			if (rs.next() == false) {
 				// 没有找到数据
-				response.setStatus(500);
+				response.setStatus(501);
 				Response(out, false, null);
 			} else {
 				rs.beforeFirst();
@@ -121,6 +121,8 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 		// 如果OK
 		JsonArray jarray = new JsonArray();
 		try {
+			QuestTable qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
+
 			while (rs.next()) {
 				int aid = rs.getInt("id");
 				String detail = rs.getString("detail");
@@ -134,16 +136,25 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail", detail);
 				jo1.addProperty("qid", qid);
+				//从quest表里面找数据
+				ResultSet qrs = qt.selectById(qid+"");
+				if(qrs.next()){
+					jo1.addProperty("qtitle",qrs.getString("title"));
+				}
+				else{
+					jo1.addProperty("qtitle",qrs.getString(""));
+				}
+				//按顺序
 				jo1.addProperty("uid",uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);
 				jo1.addProperty("comment_sum", comment_sum);
 				jo1.addProperty("name", "");
-				jo1.addProperty("photo", "");
+				jo1.addProperty("photo", "0");
 				
 				jarray.add(jo1);
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			isOK = false;
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());

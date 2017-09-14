@@ -110,6 +110,8 @@ public class AttentionTable {
 	 * @throws SQLException
 	 */
 	public boolean idAttAtt_id(String id,String att_id) throws SQLException{
+		if(Integer.parseInt(id)==Integer.parseInt(att_id))
+				return true;
 		String sql="select * from attention_table where att_id='"+att_id+"' and id='"+id+"';";
 		Statement stmt = conn.createStatement();
 		return stmt.executeQuery(sql).next();

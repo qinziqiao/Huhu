@@ -72,6 +72,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			//鐎靛湱绮ㄩ弸婊堟肠鏉╂稖顢慗SON鐟欙絾鐎�
 			if(rs.next()==false){
 				//濞屸剝婀侀幍鎯у煂閺佺増宓�
+				response.setStatus(501);
 				Response(response, false,null);
 			}
 			else{
@@ -135,7 +136,8 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 				JsonObject jo1 = new JsonObject();
 				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail",detail);
-				jo1.addProperty("qid", ""); //空值
+				jo1.addProperty("qid", "0"); //空值
+				jo1.addProperty("qtitle", "");//暂时为空
 				jo1.addProperty("uid", uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);

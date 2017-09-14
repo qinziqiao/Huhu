@@ -17,16 +17,16 @@ import sql.AttentionTable;
 import com.google.gson.JsonObject;
 
 /**
- * Servlet implementation class SetAttention
+ * Servlet implementation class CancelAttention
  */
-@WebServlet("/SetAttention")
-public class SetAttention extends HttpServlet {
+@WebServlet("/CancelAttention")
+public class CancelAttention extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SetAttention() {
+    public CancelAttention() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,7 +35,13 @@ public class SetAttention extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String request_id_string =IsLogin.isLogin(request);
 		if(request_id_string==null){
 			response.setStatus(500);
@@ -65,7 +71,7 @@ public class SetAttention extends HttpServlet {
 		//操作数据库
 		try {
 			AttentionTable at=new AttentionTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
-			if(at.insert(request_id+"", request_att_id+"")!=0){
+			if(at.delete(request_id+"", request_att_id+"")!=0){
 				isOK=true;
 			}
 			else{
@@ -85,15 +91,7 @@ public class SetAttention extends HttpServlet {
 		}	
 		
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
 	
-
 	//response响应数据
 	private boolean Response(HttpServletResponse response, boolean isOK){
 		PrintWriter out;
@@ -115,4 +113,6 @@ public class SetAttention extends HttpServlet {
 			}
 			return true;
 		}
+		
+
 }
