@@ -2,6 +2,7 @@ package serves.question;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.Servlet;
@@ -62,12 +63,14 @@ public class PostQuest extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
 		String id=IsLogin.isLogin(request);
 		PrintWriter out=response.getWriter();
 		JsonObject jo=new JsonObject();
 		if(id==null){
 			jo.addProperty("isOK", false);
 			jo.addProperty("information", "please login");
+			response.setStatus(500);
 			out.println(jo.toString());
 			return;
 		}
@@ -76,13 +79,19 @@ public class PostQuest extends HttpServlet {
 		detail=request.getParameter("detail");
 		type=request.getParameter("type");
 		try {
-			qt.insert(id, title, detail, type);
-			jo.addProperty("isOK", true);
+			ResultSet rs=qt.insert(id, title, detail, type);
+			if(rs.next()){
+				jo.addProperty("isOK", true);
+				jo.addProperty("qid", rs.getString(1));
+			}else{
+				jo.addProperty("isOK", false);
+			}
 			out.println(jo.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			jo.addProperty("isOK", false);
+			response.setStatus(500);
 			out.println(jo.toString());
 		}
 	}

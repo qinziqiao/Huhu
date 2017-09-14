@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.GlobalVar.GlobalParameter;
 import sql.AnswerTable;
+import sql.MySQLInformation;
+import sql.QuestTable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -60,12 +62,16 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 		} catch (NumberFormatException e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if (out != null)
+			if (out != null){
+				response.setStatus(500);
 				Response(out, false, null);
+			}
+				
 			return;
 		}
 
 		if (request_uid < 0) {
+			response.setStatus(500);
 			Response(out, false, null);
 			return;
 		}
@@ -74,17 +80,20 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 			AnswerTable at = new AnswerTable(GlobalParameter.uri,
 					GlobalParameter.sql_user, GlobalParameter.sql_password);
 			ResultSet rs = at.selectByUid(request_uid + "", request_page, 10);
-
+			
 			// 对结果集进行JSON解析
 			if (rs.next() == false) {
 				// 没有找到数据
+				response.setStatus(501);
 				Response(out, false, null);
 			} else {
 				rs.beforeFirst();
 				Response(out, true, rs);
 			}
-
+			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false, null);
 			return;
 		}
@@ -113,31 +122,48 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 		// 如果OK
 		JsonArray jarray = new JsonArray();
 		try {
-			while (rs.next()) {
+			QuestTable qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 
+			while (rs.next()) {
+				int aid = rs.getInt("id");
 				String detail = rs.getString("detail");
 				int qid = rs.getInt("qid");
+				int uid = rs.getInt("uid");
 				String post_time = rs.getString("post_time");
 				int agree_sum = rs.getInt("agree_sum");
 				int comment_sum = rs.getInt("comment_sum");
-
+				
 				JsonObject jo1 = new JsonObject();
+				jo1.addProperty("aid",aid);
 				jo1.addProperty("detail", detail);
 				jo1.addProperty("qid", qid);
+				//从quest表里面找数据
+				ResultSet qrs = qt.selectById(qid+"");
+				if(qrs.next()){
+					jo1.addProperty("qtitle",qrs.getString("title"));
+				}
+				else{
+					jo1.addProperty("qtitle",qrs.getString(""));
+				}
+				//按顺序
+				jo1.addProperty("uid",uid);
 				jo1.addProperty("post_time", post_time);
 				jo1.addProperty("agree_sum", agree_sum);
 				jo1.addProperty("comment_sum", comment_sum);
-		
+				jo1.addProperty("name", "");
+				jo1.addProperty("photo", "0");
+				
 				jarray.add(jo1);
 			}
-		} catch (SQLException e) {
+			qt.CloseConnection();
+		} catch (SQLException | ClassNotFoundException e) {
 			isOK = false;
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
 			out.flush();
 			out.close();
 			return false;
-		}
+		} 
 
 		jObject.addProperty("isOK", isOK);
 		jObject.add("answers", jarray);

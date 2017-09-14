@@ -61,12 +61,15 @@ public class SelectFollower extends HttpServlet {
 		}catch (NumberFormatException  e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if(out!=null)
+			if(out!=null){
+				response.setStatus(500);
 				Response(out, false,null);
+			}
 			return;
 		} 
 		
 		if(request_att_id<0){
+			response.setStatus(500);
 			Response(out, false,null);
 			System.out.println("查询为负数");
 			return;
@@ -74,11 +77,12 @@ public class SelectFollower extends HttpServlet {
 		
 		try {
 			AttentionTable at=new AttentionTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
-			ResultSet rs =at.selectByAtt_id(request_att_id+"");
+			ResultSet rs =at.selectInformByAtt_id(request_att_id+"");
 			
 			//对结果集进行JSON解析
 			if(rs.next()==false){
 				//没有找到数据
+				response.setStatus(501);
 				Response(out, false,null);
 			}
 			else{
@@ -86,7 +90,9 @@ public class SelectFollower extends HttpServlet {
 				Response(out, true,rs);
 			}
 			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
@@ -121,20 +127,26 @@ public class SelectFollower extends HttpServlet {
 		JsonArray jarray  = new JsonArray();
 		try {
 			while(rs.next()){
-				int temp = rs.getInt("id");
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				String photo= rs.getString("photo");
 				JsonObject jo = new JsonObject();
-				jo.addProperty("Follower",temp);
+				jo.addProperty("Follower",id);
+				jo.addProperty("name",name);
+				jo.addProperty("photo", photo);
 				jarray.add(jo);
 			}		
 		} catch (SQLException e) {
 			isOK=false;
+			//SQL异常
+			System.out.println("SQL error");
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
 			out.flush();
 			out.close();
 			return false;
 		}
-		
+        
 		jObject.addProperty("isOK", isOK);
 		jObject.add("Followers",jarray);
 		out.print(jObject.toString());

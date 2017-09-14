@@ -1,36 +1,37 @@
-package serves.login;
+package serves.question;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import sql.MySQLInformation;
-import sql.UserTable;
-
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import sql.MySQLInformation;
+import sql.QuestTable;
+import sql.UserTable;
+
 /**
- * Servlet implementation class Login
+ * Servlet implementation class QuestListByLid
  */
-@WebServlet("/Login")
-public class Login extends HttpServlet {
-	int a=0;
+@WebServlet("/QuestListByLid")
+public class QuestListByLid extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserTable ut; 
+	private QuestTable qt;
+	private UserTable ut;
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Login() {
+    public QuestListByLid() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,6 +42,7 @@ public class Login extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
 		try {
+			qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 			ut=new UserTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -56,14 +58,6 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//�ѵ�½����
-		HttpSession session=request.getSession(false);
-		PrintWriter out=response.getWriter();
-		if(session!=null){
-			out.println(session.getAttribute("id"));
-		}else{
-			out.println("please login again");
-		}
 	}
 
 	/**
@@ -71,36 +65,43 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String account,password;
-		account=request.getParameter("account");
-		password=request.getParameter("password");
-		JsonObject jo=new JsonObject();
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8");
 		PrintWriter out=response.getWriter();
-		ResultSet rs;
+		int page,amount=10;
+		String lid=request.getParameter("lid");
 		try {
-			rs = ut.selectByAccountPassword(account, password);
-			if(rs.next()){
-				//��½�ɹ�
-				HttpSession session=request.getSession(true);
-				session.setAttribute("id",rs.getString("id"));
-				jo.addProperty("uid", rs.getString("id"));
-				jo.addProperty("type", 1);
-				jo.addProperty("isOK", true);
-				jo.addProperty("information", "login success");
-				out.println(jo.toString());
-			}else{
-				//��½ʧ��
-				jo.addProperty("type", 0);
-				jo.addProperty("isOK", true);
-				jo.addProperty("information", "account or password is not correct");
-				out.println(jo.toString());
+			page=Integer.parseInt(request.getParameter("page"));
+			ResultSet rs=qt.selectByLid(lid, page, amount);
+			int n=0;
+			JsonObject jo;
+			JsonArray ja=new JsonArray();
+			while(rs.next()){
+				jo=new JsonObject();
+				jo.addProperty("id", rs.getString("id"));
+				jo.addProperty("uid", rs.getString("uid"));
+				jo.addProperty("title", rs.getString("title"));
+				jo.addProperty("detail", rs.getString("detail"));
+				jo.addProperty("post_time", rs.getString("post_time"));
+				jo.addProperty("answer_sum", rs.getString("answer_sum"));
+				ResultSet trs=ut.selectById(rs.getString("uid"));
+				if(trs.next()){
+					jo.addProperty("name", trs.getString("name"));
+				}else{
+					jo.addProperty("name", "unknow");
+				}
+				ja.add(jo);
 			}
-		} catch (SQLException e) {
+			JsonObject rjo=new JsonObject();
+			rjo.addProperty("isOK", true);
+			rjo.add("quests",ja);
+			out.println(rjo.toString());
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			jo.addProperty("isOK", false);
-			jo.addProperty("information", "service error");
+			JsonObject rjo=new JsonObject();
+			rjo.addProperty("isOK", false);
 			response.setStatus(500);
-			out.println(jo.toString());
+			out.println(rjo.toString());
 			e.printStackTrace();
 		}
 	}

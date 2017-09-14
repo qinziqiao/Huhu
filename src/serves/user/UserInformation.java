@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.IsLogin;
+import serves.tools.GlobalVar.GlobalParameter;
+import sql.AttentionTable;
 import sql.MySQLInformation;
 import sql.UserTable;
 
@@ -63,15 +65,23 @@ public class UserInformation extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8");
+		
 		String id=request.getParameter("id");
+		String cur_id=IsLogin.isLogin(request);
+		if(cur_id==null){
+			response.setStatus(500);
+			return;
+		}
 		PrintWriter out=response.getWriter();
 		JsonObject jo=new JsonObject();
-		if(id==null){
-			id=IsLogin.isLogin(request);
-		}
+		
 		try {
 			ResultSet rs=ut.selectById(id);
+			AttentionTable at=new AttentionTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
 			if(rs.next()){
+				jo.addProperty("isAttention", at.idAttAtt_id(cur_id, id));
 				jo.addProperty("name", rs.getString("name"));
 				jo.addProperty("type", rs.getString("type"));
 				jo.addProperty("agree_sum", rs.getString("agree_sum"));
@@ -79,11 +89,16 @@ public class UserInformation extends HttpServlet {
 			}else{
 				jo.addProperty("information", "this people is not found");
 			}
-			jo.addProperty("idOK", true);
+			jo.addProperty("isOK", true);
 			out.println(jo.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			jo.addProperty("idOK", false);
+			jo.addProperty("isOK", false);
+			response.setStatus(500);
+			out.println(jo.toString());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

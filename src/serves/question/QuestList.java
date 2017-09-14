@@ -65,6 +65,8 @@ public class QuestList extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8");
 		PrintWriter out=response.getWriter();
 //		String id=IsLogin.isLogin(request);
 //		if(id==null){
@@ -75,9 +77,9 @@ public class QuestList extends HttpServlet {
 //			return;
 //		}
 		int type,page,amount=10;
-		type=Integer.parseInt(request.getParameter("type"));
-		page=Integer.parseInt(request.getParameter("page"));
 		try {
+			type=Integer.parseInt(request.getParameter("type"));
+			page=Integer.parseInt(request.getParameter("page"));
 			ResultSet rs=qt.selectOnePage(page, amount, type);
 			int n=0;
 			JsonObject jo;
@@ -93,8 +95,10 @@ public class QuestList extends HttpServlet {
 				ResultSet trs=ut.selectById(rs.getString("uid"));
 				if(trs.next()){
 					jo.addProperty("name", trs.getString("name"));
+					jo.addProperty("photo", trs.getString("photo"));
 				}else{
 					jo.addProperty("name", "unknow");
+					jo.addProperty("photo", "0");
 				}
 				ja.add(jo);
 			}
@@ -102,11 +106,13 @@ public class QuestList extends HttpServlet {
 			rjo.addProperty("isOK", true);
 			rjo.add("quests",ja);
 			out.println(rjo.toString());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			JsonObject rjo=new JsonObject();
 			rjo.addProperty("isOK", false);
-			e.printStackTrace();
+			response.setStatus(500);
+			out.println(rjo.toString());
+			//e.printStackTrace();
 		}
 	}
 

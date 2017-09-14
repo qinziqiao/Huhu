@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.Format;
 
 import com.mysql.jdbc.Connection;
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 public class LabelTable {
 	private Connection conn;
@@ -49,6 +50,31 @@ public class LabelTable {
 		rs = sqlStatement.executeQuery();
 		
 		return rs;
+	}
+
+	/**
+	 * 得到所有label
+	 * @return
+	 */
+	public ResultSet getAllLabel()throws SQLException{
+		ResultSet rs;
+		String sqlString="select * from label_table ";
+		PreparedStatement sqlStatement = conn.prepareStatement(sqlString);
+		rs = sqlStatement.executeQuery();
+		
+		return rs;
+	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

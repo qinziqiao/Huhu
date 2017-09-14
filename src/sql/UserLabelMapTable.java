@@ -26,13 +26,13 @@ public class UserLabelMapTable {
 		if(uid<0||lid<0)
 			return false;
 		//0.首先看是否已存在
-		String judgeSQL=String.format("select * FROM zhihu.userlabelmap_table where (uid=%d and lid=%d)", uid,lid);
+		String judgeSQL=String.format("select * FROM userlabelmap_table where (uid=%d and lid=%d)", uid,lid);
 		PreparedStatement sqlStatement0  = conn.prepareStatement(judgeSQL);
 		ResultSet rs= sqlStatement0.executeQuery();
 		//如果为空
 		if(!rs.next()){
 			//1.插入数据库
-			String insertSQL ="insert into zhihu.userlabelmap_table(uid,lid) values(?,?)";
+			String insertSQL ="insert into userlabelmap_table(uid,lid) values(?,?)";
 			PreparedStatement sqlStatement  = conn.prepareStatement(insertSQL);
 			sqlStatement.setInt(1, uid);
 			sqlStatement.setInt(2, lid);
@@ -113,5 +113,17 @@ public class UserLabelMapTable {
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

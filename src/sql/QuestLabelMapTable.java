@@ -25,13 +25,13 @@ public class QuestLabelMapTable {
 		if (qid <0||lid<0)
 			return false;
 		//0.首先看是否已存在
-		String judgeSQL=String.format("select * FROM zhihu.questlabelmap_table where (qid=%d and lid=%d)", qid,lid);
+		String judgeSQL=String.format("select * FROM questlabelmap_table where (qid=%d and lid=%d)", qid,lid);
 		PreparedStatement sqlStatement0  = conn.prepareStatement(judgeSQL);
 		ResultSet rs= sqlStatement0.executeQuery();
 		//如果为空
 		if(!rs.next()){
 			//1.插入数据库
-			String insertSQL ="insert into zhihu.questlabelmap_table(qid,lid) values(?,?)";
+			String insertSQL ="insert into questlabelmap_table(qid,lid) values(?,?)";
 			PreparedStatement sqlStatement  = conn.prepareStatement(insertSQL);
 			sqlStatement.setInt(1, qid);
 			sqlStatement.setInt(2, lid);
@@ -114,6 +114,19 @@ public class QuestLabelMapTable {
 			return true;
 		else
 			return false;
+	}
+	
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -30,10 +30,11 @@ public class QuestTable {
 	 * @return
 	 * @throws SQLException
 	 */
-	public int insert(String uid,String title,String detail,String qtype) throws SQLException{
+	public ResultSet insert(String uid,String title,String detail,String qtype) throws SQLException{
 		String sql="insert into quest_table(uid,title,detail,qtype) values('"+uid+"','"+title+"','"+detail+"','"+qtype+"');";
 		Statement stmt = conn.createStatement();
-		return stmt.executeUpdate(sql);
+		stmt.executeUpdate(sql);
+		return stmt.executeQuery("SELECT @@IDENTITY;");
 	}
 	/**
 	 * ���һҳ������quest
@@ -73,6 +74,20 @@ public class QuestTable {
 		return stmt.executeQuery(sql);
 	}
 	/**
+	 * 
+	 * @param uid
+	 * @param page
+	 * @param amountPerPage
+	 * @param type
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet selectByUid(String uid,int page,int amountPerPage,String type) throws SQLException{
+		String sql="select * from quest_table where uid="+uid+" and qtype="+type+" order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
+		Statement stmt=conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
+	/**
 	 * ����ĳid��ע���˷�����quest
 	 * @param id �û�id
 	 * @param page ҳ��
@@ -97,5 +112,30 @@ public class QuestTable {
 		String sql="select * from quest_table where id in (select distinct qid from questlabelmap_table where lid in (select lid from userlabelmap_table where uid="+id+")) order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
 		Statement stmt=conn.createStatement();
 		return stmt.executeQuery(sql);
+	}
+	/**
+	 * ����lib����quest
+	 * @param lid
+	 * @param page
+	 * @param amountPerPage
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet selectByLid(String lid,int page,int amountPerPage) throws SQLException{
+		String sql="select * from quest_table where id in (select distinct qid from questlabelmap_table where lid="+lid+") order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
+		Statement stmt=conn.createStatement();
+		return stmt.executeQuery(sql);
+	}
+	
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

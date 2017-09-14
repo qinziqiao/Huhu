@@ -20,6 +20,7 @@ public class AnswerTable {
 	public AnswerTable(String uri,String account,String password) throws SQLException, ClassNotFoundException{
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(uri, account, password);
+		
 	}
 	/**
 	 * ��������
@@ -90,5 +91,16 @@ public class AnswerTable {
 		String sql="select * from answer_table where uid in (select att_id from attention_table where id="+uid+") order by post_time desc limit "+page*amountPerPage+","+amountPerPage+";";
 		Statement stmt=conn.createStatement();
 		return stmt.executeQuery(sql);
+	}
+	/**
+	 * 关闭连接
+	 */
+	public void CloseConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

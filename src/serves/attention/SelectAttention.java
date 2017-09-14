@@ -38,7 +38,6 @@ public class SelectAttention extends HttpServlet {
 	 * 返回客户端所有关注这个id的人
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		int request_id=-1;
 		boolean isOK = true;
 		PrintWriter out=null;
@@ -60,31 +59,38 @@ public class SelectAttention extends HttpServlet {
 		}catch (NumberFormatException  e) {
 			System.out.println("所填数据异常");
 			isOK = false;
-			if(out!=null)
+			if(out!=null){
+				response.setStatus(500);
 				Response(out, false,null);
+			}
 			return;
 		} 
 		
 		if(request_id<0){
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
 		
 		try {
 			AttentionTable at=new AttentionTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
-			ResultSet rs =at.selectById(request_id+"");
+			ResultSet rs =at.selectInformById(request_id+"");
 			
 			//对结果集进行JSON解析
 			if(rs.next()==false){
 				//没有找到数据
+				response.setStatus(501);
 				Response(out, false,null);
 			}
 			else{
 				rs.beforeFirst();
-				Response(out, true,rs);
+				if(Response(out, true,rs)==false)
+					response.setStatus(500);
 			}
 			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
+			response.setStatus(500);
 			Response(out, false,null);
 			return;
 		}
@@ -119,12 +125,19 @@ public class SelectAttention extends HttpServlet {
 		JsonArray jarray  = new JsonArray();
 		try {
 			while(rs.next()){
-				int temp = rs.getInt("att_id");
-				JsonObject jo = new JsonObject();
-				jo.addProperty("Attention",temp);
+				//
+				int att_id = rs.getInt("att_id");	
+				String name = rs.getString("name");
+				String photo= rs.getString("photo");
+				JsonObject jo = new JsonObject();	 
+				jo.addProperty("Attention",att_id);
+				jo.addProperty("name",name);
+				jo.addProperty("photo", photo);
 				jarray.add(jo);
 			}		
 		} catch (SQLException e) {
+			//SQL异常
+			System.out.println("SQL error");
 			isOK=false;
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
@@ -136,7 +149,6 @@ public class SelectAttention extends HttpServlet {
 		jObject.addProperty("isOK", isOK);
 		jObject.add("Attentions",jarray);
 		out.print(jObject.toString());
-		out.flush();
 		out.close();
 		return true;
 	}
