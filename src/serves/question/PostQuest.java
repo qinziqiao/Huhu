@@ -2,6 +2,7 @@ package serves.question;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.Servlet;
@@ -78,8 +79,13 @@ public class PostQuest extends HttpServlet {
 		detail=request.getParameter("detail");
 		type=request.getParameter("type");
 		try {
-			qt.insert(id, title, detail, type);
-			jo.addProperty("isOK", true);
+			ResultSet rs=qt.insert(id, title, detail, type);
+			if(rs.next()){
+				jo.addProperty("isOK", true);
+				jo.addProperty("qid", rs.getString(1));
+			}else{
+				jo.addProperty("isOK", false);
+			}
 			out.println(jo.toString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

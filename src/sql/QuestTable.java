@@ -30,10 +30,11 @@ public class QuestTable {
 	 * @return
 	 * @throws SQLException
 	 */
-	public int insert(String uid,String title,String detail,String qtype) throws SQLException{
+	public ResultSet insert(String uid,String title,String detail,String qtype) throws SQLException{
 		String sql="insert into quest_table(uid,title,detail,qtype) values('"+uid+"','"+title+"','"+detail+"','"+qtype+"');";
 		Statement stmt = conn.createStatement();
-		return stmt.executeUpdate(sql);
+		stmt.executeUpdate(sql);
+		return stmt.executeQuery("SELECT @@IDENTITY;");
 	}
 	/**
 	 * ���һҳ������quest
