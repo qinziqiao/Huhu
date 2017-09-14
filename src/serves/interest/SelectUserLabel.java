@@ -78,7 +78,7 @@ public class SelectUserLabel extends HttpServlet{
 				rs.beforeFirst();
 				Response(out, true,rs);
 			}
-			
+			uerLabelMapTable.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false,null);
@@ -125,7 +125,9 @@ public class SelectUserLabel extends HttpServlet{
 				jo.addProperty("lid",lid_temp);
 				jo.addProperty("label", label_temp);
 				jarray.add(jo);
-			}		
+			}	
+			
+			lt.CloseConnection();
 		} catch (SQLException e) {
 			isOK=false;
 			jObject.addProperty("isOK", isOK);

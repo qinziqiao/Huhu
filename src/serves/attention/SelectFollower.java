@@ -90,6 +90,7 @@ public class SelectFollower extends HttpServlet {
 				Response(out, true,rs);
 			}
 			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false,null);

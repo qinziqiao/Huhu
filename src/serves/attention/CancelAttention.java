@@ -78,7 +78,8 @@ public class CancelAttention extends HttpServlet {
 				isOK=false;
 			}
 			Response(response, isOK);
-		
+			
+			at.CloseConnection();
 		} catch (ClassNotFoundException e) {
 			System.out.println("找不到数据库类");
 			isOK=false;

@@ -88,6 +88,7 @@ public class SelectAttention extends HttpServlet {
 					response.setStatus(500);
 			}
 			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false,null);

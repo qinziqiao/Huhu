@@ -77,6 +77,7 @@ public class SelectQuestLabel extends HttpServlet{
 				Response(out, true,rs);
 			}
 			
+			questLabelMapTable.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false,null);
@@ -122,7 +123,8 @@ public class SelectQuestLabel extends HttpServlet{
 				jo.addProperty("lid",lid_temp);
 				jo.addProperty("label", label_temp);
 				jarray.add(jo);
-			}		
+			}
+			lt.CloseConnection();
 		} catch (SQLException e) {
 			isOK=false;
 			jObject.addProperty("isOK", isOK);

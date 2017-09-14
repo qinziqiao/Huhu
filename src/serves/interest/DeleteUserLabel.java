@@ -4,19 +4,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import javax.jws.WebService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.JsonObject;
 
+import serves.tools.IsLogin;
 import serves.tools.GlobalVar.GlobalParameter;
-import sql.QuestLabelMapTable;
+import sql.UserLabelMapTable;
 
-@WebServlet("/AddQuestLabel")
-public class AddQuestLabelServlet extends HttpServlet{
+@WebServlet("/DeleteUserLabel")
+public class DeleteUserLabel extends HttpServlet{
 	
 	/**
 	 * 处理请求，需要request，post型，
@@ -25,36 +28,45 @@ public class AddQuestLabelServlet extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response){
 		
-		int request_qid=-1;
+		String request_uid_string =IsLogin.isLogin(request);
+		if(request_uid_string==null){
+			Response(response, false);
+			return;
+		}
+		
+		int request_uid=-1;
 		int request_lid=-1;
 		boolean isOK=true;
 		//查看请求
 		try {
-			request_qid = Integer.parseInt( request.getParameter("qid"));
+			request_uid = Integer.parseInt( request_uid_string);
 		    request_lid = Integer.parseInt( request.getParameter("lid"));
 		} catch (NumberFormatException  e) {
 			System.out.println("传输请求数据格式异常");
 			isOK = false;
 			Response(response, isOK);
 			return;
-		}	
+		}
 		
-		if(request_qid<0|| request_lid<0){
+		System.out.println("uid="+request_uid+"  lid="+request_lid);
+		
+		if(request_uid<0|| request_lid<0){
 			Response(response, false);
 			return;
 		}
 		
 		//操作数据库
 		try {
-			QuestLabelMapTable ql=new QuestLabelMapTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
-			if(ql.setQLMT(request_qid, request_lid)){
+			UserLabelMapTable ul=new UserLabelMapTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
+			if(ul.deleteULMT(request_uid, request_lid)){
 				isOK=true;
 			}
 			else{
 				isOK=false;
 			}
+			//System.out.println(isOK);	
 			Response(response, isOK);
-			ql.CloseConnection();
+			ul.CloseConnection();
 		} catch (ClassNotFoundException e) {
 			System.out.println("找不到数据库类");
 			isOK=false;
@@ -88,7 +100,8 @@ public class AddQuestLabelServlet extends HttpServlet{
 			    
 			    jObject.addProperty("isOK", isOK);
 				out.print(jObject.toString());
-				out.close();
+				out.close();			
+					
 				
 			} catch (IOException e) {
 				System.err.println(e);

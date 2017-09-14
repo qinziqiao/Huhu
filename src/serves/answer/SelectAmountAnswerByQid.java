@@ -68,7 +68,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		try {
 			AnswerTable at=new AnswerTable(GlobalParameter.uri, GlobalParameter.sql_user, GlobalParameter.sql_password);
 			ResultSet rs =at.selectByQid(request_qid+"", request_page, 10);
-			at.CloseConnection();
+			
 			
 			//鐎靛湱绮ㄩ弸婊堟肠鏉╂稖顢慗SON鐟欙絾鐎�
 			if(rs.next()==false){
@@ -80,6 +80,8 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 				rs.beforeFirst();
 				Response(response, true,rs);
 			}
+			
+			at.CloseConnection();
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			Response(response, false,null);
@@ -130,6 +132,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			return false;
 		}
 		//婵″倹鐏塐K
+		System.out.println("isOK:OK");
 		JsonArray jarray  = new JsonArray();
 		try {
 			UserTable ut=new UserTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);

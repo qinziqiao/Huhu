@@ -80,7 +80,7 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 			AnswerTable at = new AnswerTable(GlobalParameter.uri,
 					GlobalParameter.sql_user, GlobalParameter.sql_password);
 			ResultSet rs = at.selectByUid(request_uid + "", request_page, 10);
-
+			
 			// 对结果集进行JSON解析
 			if (rs.next() == false) {
 				// 没有找到数据
@@ -90,7 +90,8 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 				rs.beforeFirst();
 				Response(out, true, rs);
 			}
-
+			
+			at.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false, null);
@@ -154,6 +155,7 @@ public class SelectAmountAnswerByUid extends HttpServlet {
 				
 				jarray.add(jo1);
 			}
+			qt.CloseConnection();
 		} catch (SQLException | ClassNotFoundException e) {
 			isOK = false;
 			jObject.addProperty("isOK", isOK);

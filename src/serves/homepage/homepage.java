@@ -103,7 +103,7 @@ public class homepage extends HttpServlet {
 				rs.beforeFirst();
 				Response(out, true, rs);
 			}
-
+			ap.CloseConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 			response.setStatus(500);
 			Response(out, false, null);
@@ -179,6 +179,8 @@ public class homepage extends HttpServlet {
 
 				jarray.add(jo1);
 			}
+			ut.CloseConnection();
+			qt.CloseConnection();
 		} catch (SQLException e) {
 			isOK = false;
 			jObject.addProperty("isOK", isOK);

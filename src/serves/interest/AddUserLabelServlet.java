@@ -66,7 +66,7 @@ public class AddUserLabelServlet extends HttpServlet{
 			}
 			//System.out.println(isOK);	
 			Response(response, isOK);
-		
+			ul.CloseConnection();
 		} catch (ClassNotFoundException e) {
 			System.out.println("找不到数据库类");
 			isOK=false;
@@ -100,8 +100,7 @@ public class AddUserLabelServlet extends HttpServlet{
 			    
 			    jObject.addProperty("isOK", isOK);
 				out.print(jObject.toString());
-				out.close();
-				
+				out.close();			
 					
 				
 			} catch (IOException e) {
