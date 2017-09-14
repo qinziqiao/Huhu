@@ -73,7 +73,7 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 			if(rs.next()==false){
 				//濞屸剝婀侀幍鎯у煂閺佺増宓�
 				response.setStatus(501);
-				Response(response, false,null);
+				Response(response, false,rs,true);
 			}
 			else{
 				rs.beforeFirst();
@@ -96,6 +96,10 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 	}
 	
 	private boolean Response(HttpServletResponse response, boolean isOK,ResultSet rs){
+		return Response(response,isOK,rs,false);
+	}
+
+	private boolean Response(HttpServletResponse response, boolean isOK,ResultSet rs,boolean isEmpty){
 			PrintWriter out;
 			try {
 				out = ((ServletResponse) response).getWriter();
@@ -113,8 +117,11 @@ public class SelectAmountAnswerByQid extends HttpServlet {
 		JsonObject jObject = new JsonObject();
 		//婵″倹鐏夋稉宄匥
 		if(!isOK){
-			//失败的时候加一个500错误码
-			response.setStatus(500);
+			//失败的时候加一个错误码
+			if(isEmpty)
+				response.setStatus(501);
+			else
+				response.setStatus(500);
 			jObject.addProperty("isOK", isOK);
 			out.print(jObject.toString());
 			out.flush();

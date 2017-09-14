@@ -25,8 +25,8 @@ public class AttentionPage {
 	
 	public ResultSet selectPageByAttention(int uid,int page ,int amount) throws SQLException{
 		//id,uid,title,detail,qtype,post_time, lower_level_sum,agree_sum
-		String sql ="select id,uid,title,detail,qtype,post_time,answer_sum as lower_level_sum,'-1'as agree_sum from quest_table where uid in(select att_id from attention_table where id="
-				+uid+ ")union all select id,uid,'-1' as title,detail,'-1'as qtype,post_time,comment_sum as lower_level_sum,agree_sum from answer_table where uid in(select att_id from attention_table where id="
+		String sql ="select id,uid,-1 as qid,title,detail,qtype,post_time,answer_sum as lower_level_sum,'-1'as agree_sum from quest_table where uid in(select att_id from attention_table where id="
+				+uid+ ")union all select id,uid,qid,'-1' as title,detail,'-1'as qtype,post_time,comment_sum as lower_level_sum,agree_sum from answer_table where uid in(select att_id from attention_table where id="
 				+uid+ ")order by post_time desc limit "+page*amount+","+amount+";";
 		Statement stmt = conn.createStatement();
 		return stmt.executeQuery(sql);

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import serves.tools.GlobalVar.GlobalParameter;
+import sql.LabelTable;
+import sql.MySQLInformation;
 import sql.UserLabelMapTable;
 
 import com.google.gson.JsonArray;
@@ -111,10 +113,17 @@ public class SelectUserLabel extends HttpServlet{
 		//如果OK
 		JsonArray jarray  = new JsonArray();
 		try {
+			LabelTable lt=new LabelTable(MySQLInformation.uri,MySQLInformation.account,MySQLInformation.password);
+
 			while(rs.next()){
 				int lid_temp = rs.getInt("lid");
+				String label_temp ="";
+				ResultSet lrs=lt.getLabel(lid_temp);
+				if(lrs.next())
+					label_temp=lrs.getString("label");
 				JsonObject jo = new JsonObject();
-				jo.addProperty("label",lid_temp);
+				jo.addProperty("lid",lid_temp);
+				jo.addProperty("label", label_temp);
 				jarray.add(jo);
 			}		
 		} catch (SQLException e) {
@@ -124,6 +133,9 @@ public class SelectUserLabel extends HttpServlet{
 			out.flush();
 			out.close();
 			return false;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		jObject.addProperty("isOK", isOK);

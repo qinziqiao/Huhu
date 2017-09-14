@@ -11,11 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import serves.tools.IsLogin;
 import serves.tools.GlobalVar.GlobalParameter;
-import sql.AnswerTable;
 import sql.AttentionPage;
 import sql.MySQLInformation;
+import sql.QuestTable;
 import sql.UserTable;
 
 import com.google.gson.JsonArray;
@@ -138,13 +137,22 @@ public class homepage extends HttpServlet {
 		JsonArray jarray = new JsonArray();
 		try {
 			UserTable ut=new UserTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
+			QuestTable qt=new QuestTable(MySQLInformation.uri, MySQLInformation.account, MySQLInformation.password);
 			while (rs.next()) {
 				
 				int id = rs.getInt("id");
 				int uid = rs.getInt("uid");
+				String qid=rs.getString("qid");
 				String title = rs.getString("title");
 				String detail= rs.getString("detail");
 				int qtype=rs.getInt("qtype");
+				
+				if(qtype==-1){
+					ResultSet qrs = qt.selectById(qid);
+					if(qrs.next())
+						title=qrs.getString("title");
+				}
+				
 				String post_time = rs.getString("post_time");
 				int lower_level_sum =rs.getInt("lower_level_sum");
 				int agree_sum = rs.getInt("agree_sum");
